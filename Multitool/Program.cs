@@ -214,10 +214,44 @@ namespace Multitool
                     goto Currency2;
             }
 
+        Amount:
             Console.Write(c1.name + " to convert: ");
             Console.ForegroundColor = ConsoleColor.Blue;
-            double amount = Convert.ToDouble(Console.ReadLine());
+            string input = Console.ReadLine()!;
             Console.ForegroundColor = ConsoleColor.White;
+            double amount1;
+            if (!double.TryParse(input, out amount1))
+            {
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Please enter a valid amount");
+                Console.ForegroundColor = ConsoleColor.White;
+                goto Amount;
+            }
+
+            double amount2 = (c1.value * amount1) / c2.value;
+
+            string a1;
+            string a2;
+            if (c1 == USD || c1 == GBP)
+            {
+                a1 = c1.symbol + amount1;
+            }
+            else
+            {
+                a1 = amount1 + " " + c1.symbol;
+            }
+            if (c2 == USD || c2 == GBP)
+            {
+                a2 = c2.symbol + amount2;
+            }
+            else
+            {
+                a2 = amount2 + " " + c2.symbol;
+            }
+
+            Console.WriteLine();
+            Console.WriteLine(a1 + " = " + a2);
         }
 
         static void Triangle()

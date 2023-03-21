@@ -109,9 +109,6 @@ namespace Multitool
         {
             title = currencyTitle;
             TitleWriter();
-            //input och output
-            //göra om alla valutor till USD som globalt värde så man slipper programmera varje möjlig kombination
-            //kanske göra alla valutor som klasser så kan de ha sin omvandling till USD som en property i konstruktorn
 
             Currency USD = new("US Dollar", "USD", "$", 1);
             Currency EUR = new("Euro", "EUR", "€", 1.07);
@@ -258,12 +255,174 @@ namespace Multitool
         {
             title = triangleTitle;
             TitleWriter();
+
+            Unit km = new("kilometre", "km", 1000);
+            Unit m = new("metre", "m", 1);
+            Unit dm = new("decimetre", "dm", 0.1);
+            Unit cm = new("centimetre", "cm", 0.01);
+            Unit mm = new("millimetre", "mm", 0.001);
+
+            Unit u1;
+            Unit u2;
+
+            Console.WriteLine("Enter the measurements of your triangle to calculate the area.");
+
+        Width:
+            Console.Write("Width: ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            string input1 = Console.ReadLine()!;
+            double width;
+            if (!double.TryParse(input1, out width))
+            {
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Please enter a valid number");
+                Console.ForegroundColor = ConsoleColor.White;
+                goto Width;
+            }
+            Console.SetCursorPosition(0, Console.CursorTop - 1);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Width: ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write(input1 + " ");
+
+        Unit1:
+            Console.ForegroundColor = ConsoleColor.Blue;
+            string wUnit = Console.ReadLine()!;
+            switch (wUnit)
+            {
+                case "cm":
+                    u1 = cm;
+                    break;
+                case "dm":
+                    u1 = dm;
+                    break;
+                case "m":
+                    u1 = m;
+                    break;
+                case "mm":
+                    u1 = mm;
+                    break;
+                case "km":
+                    u1 = km;
+                    break;
+                default:
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Please enter a valid unit of measurement");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write("Width: ");
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write(input1 + " ");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    goto Unit1;
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+
+        Length:
+            Console.Write("Length: ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            string input2 = Console.ReadLine()!;
+            double length;
+            if (!double.TryParse(input2, out length))
+            {
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Please enter a valid number");
+                Console.ForegroundColor = ConsoleColor.White;
+                goto Length;
+            }
+            Console.SetCursorPosition(0, Console.CursorTop - 1);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Length: ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write(input2 + " ");
+
+        Unit2:
+            Console.ForegroundColor = ConsoleColor.Blue;
+            string lUnit = Console.ReadLine()!;
+            switch (lUnit)
+            {
+                case "cm":
+                    u2 = cm;
+                    break;
+                case "dm":
+                    u2 = dm;
+                    break;
+                case "m":
+                    u2 = m;
+                    break;
+                case "mm":
+                    u2 = mm;
+                    break;
+                case "km":
+                    u2 = km;
+                    break;
+                default:
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Please enter a valid unit of measurement");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write("Length: ");
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write(input2 + " ");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    goto Unit2;
+            }
+
+            double widthValue = width * u1.value;
+            double lengthValue = length * u2.value;
+            double result = widthValue * lengthValue / 2;
+            string resultUnit = "m";
+
+            if (result < 0.1)
+            {
+                result *= 100;
+                resultUnit = "dm";
+
+                if (result < 0.1)
+                {
+                    result *= 100;
+                    resultUnit = "cm";
+
+                    if (result < 0.1)
+                    {
+                        result *= 100;
+                        resultUnit = "mm";
+                    }
+                }
+            }
+            else if (result > 10000)
+            {
+                result /= 1000000;
+                resultUnit = "km";
+            }
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine();
+            Console.Write("Your triangle width a width of ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write(input1 + " " + wUnit);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(" and length of ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine(input2 + " " + lUnit);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("has an area of ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write(result + " " + resultUnit + "²");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(".");
         }
 
         static void Sort()
         {
             title = sortTitle;
             TitleWriter();
+
+            //skapa en array och låt användaren ange hur många heltal man vill
+            //for loop för att gå igenom alla inputs i arrayen
+            //använd % (modero) och kolla om det blir en rest eller inte efter inputen delats med 2
         }
 
         static void LinBinSearch()
@@ -301,6 +460,20 @@ namespace Multitool
                 this.name = name;
                 this.code = code;
                 this.symbol = symbol;
+                this.value = value;
+            }
+        }
+
+        class Unit
+        {
+            public string name;
+            public string sName;
+            public double value;
+
+            public Unit(string name, string sName, double value)
+            {
+                this.name = name;
+                this.sName = sName;
                 this.value = value;
             }
         }

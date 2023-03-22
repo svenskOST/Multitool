@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 namespace Multitool
@@ -420,9 +421,76 @@ namespace Multitool
             title = sortTitle;
             TitleWriter();
 
-            //skapa en array och låt användaren ange hur många heltal man vill
-            //for loop för att gå igenom alla inputs i arrayen
-            //använd % (modero) och kolla om det blir en rest eller inte efter inputen delats med 2
+            Console.WriteLine("Enter any amount of numbers, separated by a comma and space.");
+        Numbers:
+            Console.ForegroundColor = ConsoleColor.Blue;
+            string input = Console.ReadLine()!;
+            Console.ForegroundColor = ConsoleColor.White;
+            string[] inputs = input.Split(",");
+            int[] numbers = new int[inputs.Length];
+            int[] odd = new int[0];
+            int[] even = new int[0];
+            int l = -1;
+            int j = -1;
+
+            for (int i= 0; i < inputs.Length; i++)
+            {
+                inputs[i] = inputs[i].Trim();
+                if (!int.TryParse(inputs[i], out numbers[i]))
+                {
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Please enter valid, whole numbers");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    goto Numbers;
+                }
+                numbers[i] = Convert.ToInt32(inputs[i]);
+            }
+
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                if (numbers[i] % 2 == 1)
+                {
+                    l++;
+                    Array.Resize(ref odd, l + 1);
+                    odd[l] = numbers[i];
+                }
+                else
+                {
+                    j++;
+                    Array.Resize(ref even, j + 1);
+                    even[j] = numbers[i];
+                }
+            }
+
+            Array.Sort(odd);
+            Array.Sort(even);
+
+            Console.WriteLine();
+            Console.Write("Out of the numbers you entered, ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write(odd.Length);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(" are odd:");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            for (int i = 0; i < odd.Length; i++)
+            {
+                Console.WriteLine(odd[i]);
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+
+            Console.WriteLine();
+            Console.Write("And ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write(even.Length);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(" are even:");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            for (int i = 0; i < even.Length; i++)
+            {
+                Console.WriteLine(even[i]);
+            }
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         static void LinBinSearch()

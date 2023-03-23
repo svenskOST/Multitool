@@ -497,12 +497,175 @@ namespace Multitool
         {
             title = linBinTitle;
             TitleWriter();
+
+            Console.WriteLine("Which one would you like to try?");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("1 - Linear search");
+            Console.WriteLine("2 - Binary search");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine();
+            string mode;
+
+        SearchChoice:
+            ConsoleKeyInfo search = Console.ReadKey(true);
+            switch (search.Key)
+            {
+                case ConsoleKey.D1:
+                    mode = "linear";
+                    break;
+                case ConsoleKey.D2:
+                    mode = "binary";
+                    break;
+                default:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Please enter a valid number");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    goto SearchChoice;
+            }
+
+            Console.ForegroundColor = ConsoleColor.Blue;
+            if (mode == "linear")
+            {
+                Console.WriteLine("Linear search");
+            }
+            else
+            {
+                Console.WriteLine("Binary search");
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine();
+
+            Random random = new();
+            int rnd = random.Next(500, 2000);
+            int[] numbers = new int[rnd];
+            Number[] nums = new Number[rnd];
+            for (int i = 0; i < rnd; i++)
+            {
+                int rand = random.Next(5000);
+                numbers[i] = rand;
+                nums[i] = new(rand, i);
+            }
+
+            Console.WriteLine("Choose a number to search for:");
+            for (int i = 0; i < rnd; i++)
+            {
+                if (i < rnd - 1)
+                {
+                    Console.Write(numbers[i] + ", ");
+                }
+                else
+                {
+                    Console.WriteLine(numbers[i]);
+                }
+            }
+
+        NumChoice:
+            Console.ForegroundColor = ConsoleColor.Blue;
+            string choosen = Console.ReadLine()!;
+            if (!int.TryParse(choosen, out int choice))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Please choose a valid number");
+                Console.ForegroundColor = ConsoleColor.White;
+                goto NumChoice;
+            }
+            int index = -1;
+            DateTime startTime;
+            TimeSpan endTime;
+
+            if (mode == "linear")
+            {
+                startTime = DateTime.Now;
+                for (int i = 0; i < rnd; i++)
+                {
+                    if (numbers[i] == choice)
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+                endTime = DateTime.Now - startTime;
+            }
+            else
+            {
+                startTime = DateTime.Now;
+                Array.Sort(nums, new NumSorter()!);
+                int start = 0;
+                int end = rnd - 1;
+                while (start <= end)
+                {
+                    int centre = (start + end) / 2;
+                    if (nums[centre].number == choice)
+                    {
+                        index = nums[centre].index;
+                        break;
+                    }
+                    else if (nums[centre].number < choice)
+                    {
+                        start = centre + 1;
+                    }
+                    else
+                    {
+                        end = centre - 1;
+                    }
+                }
+                endTime = DateTime.Now - startTime;
+            }
+
+            if (index == -1)
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(choice + " was not found!");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write(choice);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(" was found at index ");
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write(index);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(" in ");
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write(Math.Round(endTime.TotalMilliseconds) + " ms");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(".");
+                for (int i = 0; i < rnd; i++)
+                {
+                    if (i == index)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+
+                    if (i < rnd - 1)
+                    {
+                        Console.Write(numbers[i]);
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write(", ");
+                    }
+                    else
+                    {
+                        Console.WriteLine(numbers[i]);
+                    }
+                }
+            }
         }
 
         static void Search()
         {
             title = searchTitle;
             TitleWriter();
+
+            //en mer komplex sökning än förra 
+            //massor med data som sorteras och visualiseras i konsolen snabbt, så det ser coolt ut
         }
 
         static void TitleWriter()
@@ -543,6 +706,26 @@ namespace Multitool
                 this.name = name;
                 this.sName = sName;
                 this.value = value;
+            }
+        }
+
+        public class Number
+        {
+            public int number;
+            public int index;
+
+            public Number(int number, int index)
+            {
+                this.number = number;
+                this.index = index;
+            }
+        }
+
+        public class NumSorter : IComparer<Number>
+        {
+            public int Compare(Number? x, Number? y)
+            {
+                return x!.number.CompareTo(y!.number);
             }
         }
     }

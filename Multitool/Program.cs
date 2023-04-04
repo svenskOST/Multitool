@@ -15,6 +15,7 @@ namespace Multitool
 
         static string[]? title;
 
+        //För ett mer strukturerat och optimerat program har jag titlarna i txt filer.
         readonly static string[] mainTitle = File.ReadAllLines(@"C:\Users\alexander.marini\OneDrive - Academedia\Desktop\Programmering 1\Multitool (11)\Multitool\Titles\MainTitle.txt");
         readonly static string[] currencyTitle = File.ReadAllLines(@"C:\Users\alexander.marini\OneDrive - Academedia\Desktop\Programmering 1\Multitool (11)\Multitool\Titles\CurrencyTitle.txt");
         readonly static string[] triangleTitle = File.ReadAllLines(@"C:\Users\alexander.marini\OneDrive - Academedia\Desktop\Programmering 1\Multitool (11)\Multitool\Titles\TriangleTitle.txt");
@@ -22,6 +23,7 @@ namespace Multitool
         readonly static string[] linBinTitle = File.ReadAllLines(@"C:\Users\alexander.marini\OneDrive - Academedia\Desktop\Programmering 1\Multitool (11)\Multitool\Titles\LinBinTitle.txt");
         readonly static string[] searchTitle = File.ReadAllLines(@"C:\Users\alexander.marini\OneDrive - Academedia\Desktop\Programmering 1\Multitool (11)\Multitool\Titles\SearchTitle.txt");
 
+        //Programmets ingångsläge gör först konsolen fullscreen och sedan körs en loop tills användaren går ut ur den.
         static void Main()
         {
             Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
@@ -38,6 +40,7 @@ namespace Multitool
             Console.WriteLine("Thank you for using the program, bye!");
         }
 
+        //Här väljer man ett av de fem miniprogrammen.
         static void MainLoop()
         {
             Console.WriteLine();
@@ -54,6 +57,7 @@ namespace Multitool
             Console.WriteLine();
             Console.WriteLine();
 
+            //Beroende på vilken tangent som trycks körs ett program, om tangenten inte stämmer kommer ett error meddelande.
         ToolChoice:
             ConsoleKeyInfo tool = Console.ReadKey(true);
             switch (tool.Key)
@@ -106,6 +110,9 @@ namespace Multitool
             }
         }
 
+        /*Detta program låter användaren välja två valutor samt en summa, för att konvertera från ena till den andra.
+          Jag har skapat flera objekt, valutor, av klassen Currency där jag tilldelar attribut som namn, förkortning, tecken och
+          framförallt ett värde i US Dollar. På så sätt kan jag använda dollar som ett globalt värde för att omvandla valutorna.*/
         static void CurrencyConverter()
         {
             title = currencyTitle;
@@ -252,11 +259,13 @@ namespace Multitool
             Console.WriteLine(a1 + " = " + a2);
         }
 
+        //Detta program beräknar arean på en triangel givet en längd och bred i valfri enhet, och bestämmer sedan automatiskt lämplig enhet för resultatet.
         static void Triangle()
         {
             title = triangleTitle;
             TitleWriter();
 
+            //Likt förra programet har jag klasser för måtten med ett globalt värde i meter
             Unit km = new("kilometre", "km", 1000);
             Unit m = new("metre", "m", 1);
             Unit dm = new("decimetre", "dm", 0.1);
@@ -416,6 +425,7 @@ namespace Multitool
             Console.WriteLine(".");
         }
 
+        //Här sorteras en array av givna heltal in i två nya arrays, en för jämna och en för udda nummer.
         static void Sort()
         {
             title = sortTitle;
@@ -447,6 +457,7 @@ namespace Multitool
                 numbers[i] = Convert.ToInt32(inputs[i]);
             }
 
+            //För att avgöra om talet är udda eller jämnt använder jag modero, %, operatören.
             for (int i = 0; i < numbers.Length; i++)
             {
                 if (numbers[i] % 2 == 1)
@@ -493,6 +504,7 @@ namespace Multitool
             Console.ForegroundColor = ConsoleColor.White;
         }
 
+        //Här är ett program som demonstrerar linjär och binär sökning samt mäter tiden för de två algoritmerna.
         static void LinBinSearch()
         {
             title = linBinTitle;
@@ -535,6 +547,7 @@ namespace Multitool
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine();
 
+            //Först skapas en array av ett slumpässigt antal nummer, och varje nummer slumpas.
             Random random = new();
             int rnd = random.Next(500, 2000);
             int[] numbers = new int[rnd];
@@ -546,6 +559,7 @@ namespace Multitool
                 nums[i] = new(rand, i);
             }
 
+            //Sedan kan användaren välja ett nummer att söka efter.
             Console.WriteLine("Choose a number to search for:");
             for (int i = 0; i < rnd; i++)
             {
@@ -573,6 +587,7 @@ namespace Multitool
             DateTime startTime;
             TimeSpan endTime;
 
+            //Den linjära sökningen är ganska simpel, programmet går igenom arrayen från början till slut tills nummret har hittats.
             if (mode == "linear")
             {
                 startTime = DateTime.Now;
@@ -588,6 +603,11 @@ namespace Multitool
             }
             else
             {
+                /*Binär sökning är lite mer avancerad. Den går ut på att varje gång halvera mängden data genom att kolla om mitten är mindre eller större
+                  än det som sökes och fokusera på en av halvorna. Problemet med binär sökning är att den måste vara i storleksordning, vilket jag först inte
+                  hade tänkt på när jag gjorde linjär sökning. Jag ville fortfarande kunna jämföra båda på samma array så jag kom på en lösning. Jag har en klass 
+                  som heter Number, där objekten har attributen nummer och index. På så sätt kan jag sortera arrayen och utföra binär sökning och veta alla nummers
+                  ursprungliga index. Detta tar troligen mycket längre tid dock och är inte optimalt.*/
                 startTime = DateTime.Now;
                 Array.Sort(nums, new NumSorter()!);
                 int start = 0;
@@ -659,13 +679,109 @@ namespace Multitool
             }
         }
 
+        //Här är en annan typ av sökalgoritm där jag söker igenom från början OCH slut samtidigt, in mot mitten.
         static void Search()
         {
             title = searchTitle;
             TitleWriter();
 
-            //en mer komplex sökning än förra 
-            //massor med data som sorteras och visualiseras i konsolen snabbt, så det ser coolt ut
+            Random random = new();
+            int rnd = random.Next(500, 2000);
+            int[] numbers = new int[rnd];
+            for (int i = 0; i < rnd; i++)
+            {
+                int rand = random.Next(5000);
+                numbers[i] = rand;
+            }
+
+            Console.WriteLine("Choose a number to search for:");
+            for (int i = 0; i < rnd; i++)
+            {
+                if (i < rnd - 1)
+                {
+                    Console.Write(numbers[i] + ", ");
+                }
+                else
+                {
+                    Console.WriteLine(numbers[i]);
+                }
+            }
+
+        NumChoice:
+            Console.ForegroundColor = ConsoleColor.Blue;
+            string choosen = Console.ReadLine()!;
+            if (!int.TryParse(choosen, out int choice))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Please choose a valid number");
+                Console.ForegroundColor = ConsoleColor.White;
+                goto NumChoice;
+            }
+            int index = -1;
+            DateTime startTime;
+            TimeSpan endTime;
+
+            startTime = DateTime.Now;
+            for (int i = 0; i < rnd; i++)
+            {
+                if (numbers[i] == choice)
+                {
+                    index = i;
+                    break;
+                }
+                else if (numbers[rnd - 1 - i] == choice)
+                {
+                    index = rnd - 1 - i;
+                    break;
+                }
+            }
+            endTime = DateTime.Now - startTime;
+
+            if (index == -1)
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(choice + " was not found!");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write(choice);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(" was found at index ");
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write(index);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(" in ");
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write(Math.Round(endTime.TotalMilliseconds) + " ms");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(".");
+                for (int i = 0; i < rnd; i++)
+                {
+                    if (i == index)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+
+                    if (i < rnd - 1)
+                    {
+                        Console.Write(numbers[i]);
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write(", ");
+                    }
+                    else
+                    {
+                        Console.WriteLine(numbers[i]);
+                    }
+                }
+            }
         }
 
         static void TitleWriter()
